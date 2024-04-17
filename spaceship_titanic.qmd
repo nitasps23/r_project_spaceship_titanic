@@ -1,6 +1,9 @@
 ---
 title: "Spaceship Titanic Project"
-format: html
+format:
+  html:
+    embed-resources: true
+    code: true
 execute:
   echo: false
 editor: visual
@@ -45,7 +48,7 @@ View(spaceship)
 
 ## Getting insights from the variables
 
-### 1. Where were the home planets of those passengers departed from?
+### 1. Where were the home planets of the passengers departed from?
 
 The passengers departed from three main home planets Earth, Europa, and Mars. About half of those passengers (53%) were from Earth. There're small number (2%) of passengers whose their home planets information are missing.
 
@@ -83,7 +86,7 @@ ggplot(data, aes(ymax=ymax, ymin=ymin, xmax=4, xmin=3, fill=HomePlanet)) +
 
 ### 2. Which planet destination most passengers would be debarking to?
 
-There are three destinations the passengers would be debarking to 55 Cancri e, PSO J318.5-22, and TRAPPIST-1e. TRAPPIST-1e appears to be the top destination - 68% of the passengers were to emigrate there.
+There are three destinations the passengers would be debarking to 55 Cancri e, PSO J318.5-22, and TRAPPIST-1e. TRAPPIST-1e appears to be the top destination; 68% of the passengers were to emigrate there.
 
 #### Passenger count by Destination:
 
@@ -119,7 +122,7 @@ ggplot(data, aes(ymax=ymax, ymin=ymin, xmax=4, xmin=3, fill=Destination)) +
 
 ### 3. Top 3 HomePlanet and Destination pairs
 
-The majority of passengers were emigrating from Earth to TRAPPIST-1e (36% of the passengers). The 2nd and 3rd were Mars to TRAPPIST-1e and Europa to TRAPPIST-1e respectively. Though there were higher number of passengers from Earth who were being transported to TRAPPIST-1e. Those from Mars shows higher likelihood to emigrate to TRAPPIST-1e than those from Earth (84% of passengers from Mars opted to emigrate to TRAPPIST-1e vs. 67% of those from Earth). Passengers from Europa were the only group that shows higher interest in emigrating to 55 Cancri e (42% of Europa Passengers were heading there). PSO J318.5-22 appears to be the least appealing destination among the passengers.
+The majority of passengers were emigrating from Earth to TRAPPIST-1e (36% of the passengers). The 2nd and 3rd were Mars to TRAPPIST-1e and Europa to TRAPPIST-1e respectively. Though, there were higher number of passengers from Earth who were being transported to TRAPPIST-1e, those from Mars shows higher likelihood to emigrate to TRAPPIST-1e than Earth passengers (84% of passengers from Mars opted to emigrate to TRAPPIST-1e vs. 67% of those from Earth). Passengers from Europa were the only group that shows most interest in emigrating to 55 Cancri e (42% of Europa Passengers were heading there). PSO J318.5-22 appears to be the least appealing destination among the passengers.
 
 #### **HomePlanet & Destination pairs (count):**
 
@@ -138,9 +141,9 @@ crosstab(spaceship, row.vars = "HomePlanet", col.vars = "Destination", type = "r
 
 ### 4. Who got transported based on HomePlanet and Destination?
 
-Again, despite the higher number of passengers from Earth on board comparing to the other two home planets, there was a higher percentage among passengers from Europa that got transported to their destination (66% of passengers from Europa were transported vs. 42% of passengers from Earth). Earth was the only home planet that shows a higher likelihood of those passengers who were not transported.
+Despite the higher number of passengers from Earth on board comparing to the other two home planets, there was a higher percentage among passengers from Europa who got transported (66% of passengers from Europa were transported vs. 42% of passengers from Earth). Home planet Earth appears to have a higher likelihood of those passengers who were not transported.
 
-55 Cancri e destination has a higher portion of transported passengers (61% of passengers got transported to 55 Cancri e comparing to 47% of those transported to Earth).
+Passengers of 55 Cancri e destination show the highest portion of being transported (61% of passengers got transported comparing to 47% of those with TRAPPIST-1e destination).
 
 #### Crosstab of HomePlanet & Transported:
 
@@ -179,11 +182,11 @@ ggplot(as.data.frame(data),
   ylab("(count)")
 ```
 
-### 5. What does the age groups look like among the passengers?
+### 5. What did the age groups look like among the passengers?
 
-Average age of the passengers are 29, youngest passengers are 0 (assuming they were newborns who hadn't reach 1 year old), and the oldest passengers are 79. The majority of the passengers (53%) were adult between 20-39. There were much smaller passengers among those children 0-12 (9%) and senior 60+ (3%).
+Average age of the passengers were 29, youngest passengers were 0 (assuming they were newborns who hadn't reach 1 year old), and the oldest passengers were 79. The majority of the passengers (53%) were adult between 20-39. There were much smaller passengers among those children 0-12 (9%) and senior 60+ (3%).
 
-Among the transported passengers, children 0-12 and teens 13-19 shows the higher likelihood of being transported (70% and 52% respectively) than the older age groups.
+Among the transported passengers, children 0-12 shows the highest likelihood of being transported (70%) than the older age groups.
 
 #### Summary statistics (Age):
 
@@ -312,7 +315,7 @@ p2 <- spaceship |>
 p1 + p2
 ```
 
-#### CryoSleep vs HomePlanet and Destination:
+#### Count of passengers opting CryoSleep by HomePlanet and Destination:
 
 ```{r}
 # CryoSleep vs HomePlanet and Destination
@@ -371,7 +374,7 @@ crosstab(spaceship,
          dec.places = 0)
 ```
 
-#### VIP passengers vs HomePlanet & Destination:
+#### Count of VIP passengers by HomePlanet and Destination (% column):
 
 ```{r}
 spaceship |>
@@ -406,9 +409,9 @@ p1 + p2
 
 ### 8. Who were those big spenders on board?
 
-It appears Europa passengers were the biggest spender on the luxury amenities - 6.8 million in total bill with an average of 3.5 thousand per passenger. Earth passengers appears to be the second in spending by total billed at 2.8 million - but that's mainly because they were the largest group on board. They were actually the least spenders with an average of 688 per passenger. Adult 20-39 group was the top spender by total billed (6.8 million) while Senior 60+ was the top spender by average spending per passenger (around 2 thousand per passenger).
+It appears Europa passengers were the biggest spender on the luxury amenities; 6.8 million in total bill with an average of 3.5 thousand per passenger. Earth passengers appears to be the second in spending by total billed at 2.8 million. But because Earth passengers were the largest group on board, they were actually the least spenders with an average of 688 per passenger. Adult 20-39 group was the top spender by total billed (6.8 million) while Senior 60+ was the top spender by average spending per passenger (around 2 thousand per passenger).
 
-#### Top 5 spenders by total bill:
+#### Top 5 spenders by Total bill:
 
 ```{r}
 #| message: false
@@ -423,7 +426,7 @@ spaceship |>
   top_n(5)
 ```
 
-#### Sum of total bill by HomePlanet:
+#### Sum of Total bill by HomePlanet:
 
 ```{r}
 # Sum bills by HomePlanet
@@ -436,7 +439,7 @@ spaceship |>
   arrange(desc(Sum_Total_bill))
 ```
 
-#### Average total bill by HomePlanet:
+#### Average Total bill by HomePlanet:
 
 ```{r}
 # Avg bills by HomePlanet
@@ -449,7 +452,7 @@ spaceship |>
   arrange(desc(Avg_Total_bill))
 ```
 
-#### Boxplot of HomePlanet vs total bill:
+#### Boxplot of HomePlanet vs Total bill:
 
 ```{r}
 #| warning: false
@@ -462,7 +465,7 @@ spaceship |>
   coord_flip()
 ```
 
-#### Sum of total bill by Destination:
+#### Sum of Total bill by Destination:
 
 ```{r}
 # Sum bills by Destination
@@ -475,7 +478,7 @@ spaceship |>
   arrange(desc(Sum_Total_bill))
 ```
 
-#### Average total bill by Destination:
+#### Average Total bill by Destination:
 
 ```{r}
 # Avg bills by Destination
@@ -488,7 +491,7 @@ spaceship |>
   arrange(desc(Avg_Total_bill))
 ```
 
-#### Sum of total bill by Age group:
+#### Sum of Total bill by Age group:
 
 ```{r}
 # Sum bills by Age groups
@@ -501,7 +504,7 @@ spaceship |>
   arrange(desc(Sum_Total_bill))
 ```
 
-#### Average total bill by Age group:
+#### Average Total bill by Age group:
 
 ```{r}
 # Avg bills by Age_group
@@ -514,7 +517,7 @@ spaceship |>
   arrange(desc(Avg_Total_bill))
 ```
 
-#### Boxplot of Age group vs total bill:
+#### Boxplot of Age group vs Total bill:
 
 ```{r}
 #| warning: false
@@ -528,7 +531,7 @@ spaceship |>
   coord_flip()
 ```
 
-#### Sum of total bill by Transported:
+#### Sum of Total bill by Transported:
 
 ```{r}
 # anything significant between bills vs Transported?
@@ -541,7 +544,7 @@ spaceship |>
   arrange(desc(Sum_Total_bill))
 ```
 
-#### Boxplot of Transported vs total bill:
+#### Boxplot of Transported vs Total bill:
 
 ```{r}
 #| warning: false
@@ -565,8 +568,8 @@ crosstab(spaceship, row.vars = "Transported", dec.places = 1)
 
 ## Conclusion
 
-This Spaceship Titanic data has records of 8,693 passengers (observations) who were on the spaceship emigrating to new habitable planets. The dataset collects the passenger information including their Name, HomePlanet, Destination, Age, amenity usage like CryoSleep, their spending on luxury amenities, VIP status, and whether they were transported to another dimension.
+The Spaceship Titanic data has records of 8,693 passengers (observations) who were on the spaceship emigrating to new habitable planets. The dataset collects the passenger information including their Name, HomePlanet, Destination, Age, amenity usage like CryoSleep, their spending on luxury amenities, VIP status, and whether they were transported to another dimension.
 
 After analyzing the data, it was found that the passengers were from Earth, Europa, and Mars emigrating to these three new destinations 55 Cancri e, PSO J318.5-22, and TRAPPIST-1e. Earth passengers were the largest group among all passengers (4,602 / 53%). TRAPPIST-1e was the destination where the majority of the passengers were debarking to (5,915 / 68%). The passenger age ranges from youngest (less than 1 year old) to oldest 79 years old. The largest age group were those adult age 20-39 (4,497 / 53%). More passengers (5,439 / 64%) opted to not be put into CryoSleep for the duration of the voyage. There was very small group of passengers (199 / 2%) who paid for VIP service. The passengers from Europa were dominating the VIP service and they were also the biggest spenders on the luxury amenities.
 
-Among the passengers who were transported to an alternate dimension, a combination of the following factors appear to show higher chance of being transported. The passengers from Europa (61%), those who would be debarking to 55 Cancri e (61%), those children age group between 0-12 (70%), those who opted to use CryoSleep (82%), and those who spent less on amenities and non-VIP.
+Among the passengers who were transported to an alternate dimension, a combination of the following factors indicate higher chance of being transported. The passengers from Europa (61%), those who would be debarking to 55 Cancri e (61%), those children age group between 0-12 (70%), those who opted to use CryoSleep (82%), and those who spent less on amenities and non-VIP.
