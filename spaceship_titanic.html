@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Spaceship Titanic Project</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="spaceship_titanic_files/libs/clipboard/clipboard.min.js"></script>
+<script src="spaceship_titanic_files/libs/quarto-html/quarto.js"></script>
+<script src="spaceship_titanic_files/libs/quarto-html/popper.min.js"></script>
+<script src="spaceship_titanic_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="spaceship_titanic_files/libs/quarto-html/anchor.min.js"></script>
+<link href="spaceship_titanic_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="spaceship_titanic_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="spaceship_titanic_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="spaceship_titanic_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="spaceship_titanic_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Spaceship Titanic Project</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<p>The objective of this project is to conduct an exploratory data analysis of the Spaceship Titanic data set using statistics summary and visualization approaches to explore the data and to identify interesting patterns and significant information within the data.</p>
+<section id="check-data-structure" class="level2">
+<h2 class="anchored" data-anchor-id="check-data-structure">Check data structure</h2>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>'data.frame':   8693 obs. of  14 variables:
+ $ PassengerId : chr  "0001_01" "0002_01" "0003_01" "0003_02" ...
+ $ HomePlanet  : chr  "Europa" "Earth" "Europa" "Europa" ...
+ $ CryoSleep   : chr  "False" "False" "False" "False" ...
+ $ Cabin       : chr  "B/0/P" "F/0/S" "A/0/S" "A/0/S" ...
+ $ Destination : chr  "TRAPPIST-1e" "TRAPPIST-1e" "TRAPPIST-1e" "TRAPPIST-1e" ...
+ $ Age         : num  39 24 58 33 16 44 26 28 35 14 ...
+ $ VIP         : chr  "False" "False" "True" "False" ...
+ $ RoomService : num  0 109 43 0 303 0 42 0 0 0 ...
+ $ FoodCourt   : num  0 9 3576 1283 70 ...
+ $ ShoppingMall: num  0 25 0 371 151 0 3 0 17 0 ...
+ $ Spa         : num  0 549 6715 3329 565 ...
+ $ VRDeck      : num  0 44 49 193 2 0 0 NA 0 0 ...
+ $ Name        : chr  "Maham Ofracculy" "Juanna Vines" "Altark Susent" "Solam Susent" ...
+ $ Transported : chr  "False" "True" "False" "False" ...</code></pre>
+</div>
+</div>
+</section>
+<section id="getting-insights-from-the-variables" class="level2">
+<h2 class="anchored" data-anchor-id="getting-insights-from-the-variables">Getting insights from the variables</h2>
+<section id="where-were-the-home-planets-of-those-passengers-departed-from" class="level3">
+<h3 class="anchored" data-anchor-id="where-were-the-home-planets-of-those-passengers-departed-from">1. Where were the home planets of those passengers departed from?</h3>
+<p>The passengers departed from three main home planets Earth, Europa, and Mars. About half of those passengers (53%) were from Earth. There’re small number (2%) of passengers whose their home planets information are missing.</p>
+<section id="passenger-count-by-homeplanet" class="level4">
+<h4 class="anchored" data-anchor-id="passenger-count-by-homeplanet">Passenger count by HomePlanet:</h4>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>          
+HomePlanet Count Total %
+   Earth    4602      53
+   Europa   2131      25
+   Mars     1759      20
+   Unknown   201       2
+   Sum      8693     100</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="spaceship_titanic_files/figure-html/HomePlanet%20-%20count%20-%20donut%20plot-1.png" class="img-fluid" width="576"></p>
+</div>
+</div>
+</section>
+</section>
+<section id="which-planet-destination-most-passengers-would-be-debarking-to" class="level3">
+<h3 class="anchored" data-anchor-id="which-planet-destination-most-passengers-would-be-debarking-to">2. Which planet destination most passengers would be debarking to?</h3>
+<p>There are three destinations the passengers would be debarking to 55 Cancri e, PSO J318.5-22, and TRAPPIST-1e. TRAPPIST-1e appears to be the top destination - 68% of the passengers were to emigrate there.</p>
+<section id="passenger-count-by-destination" class="level4">
+<h4 class="anchored" data-anchor-id="passenger-count-by-destination">Passenger count by Destination:</h4>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>               
+Destination     Count Total %
+  55 Cancri e    1800      21
+  PSO J318.5-22   796       9
+  TRAPPIST-1e    5915      68
+  Unknown         182       2
+  Sum            8693     100</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="spaceship_titanic_files/figure-html/Destination%20-%20count%20-%20donut%20plot-1.png" class="img-fluid" width="576"></p>
+</div>
+</div>
+</section>
+</section>
+<section id="top-3-homeplanet-and-destination-pairs" class="level3">
+<h3 class="anchored" data-anchor-id="top-3-homeplanet-and-destination-pairs">3. Top 3 HomePlanet and Destination pairs</h3>
+<p>The majority of passengers were emigrating from Earth to TRAPPIST-1e (36% of the passengers). The 2nd and 3rd were Mars to TRAPPIST-1e and Europa to TRAPPIST-1e respectively. Though there were higher number of passengers from Earth who were being transported to TRAPPIST-1e. Those from Mars shows higher likelihood to emigrate to TRAPPIST-1e than those from Earth (84% of passengers from Mars opted to emigrate to TRAPPIST-1e vs.&nbsp;67% of those from Earth). Passengers from Europa were the only group that shows higher interest in emigrating to 55 Cancri e (42% of Europa Passengers were heading there). PSO J318.5-22 appears to be the least appealing destination among the passengers.</p>
+<section id="homeplanet-destination-pairs-count" class="level4">
+<h4 class="anchored" data-anchor-id="homeplanet-destination-pairs-count"><strong>HomePlanet &amp; Destination pairs (count):</strong></h4>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>   HomePlanet   Destination    n percent_total
+1       Earth   TRAPPIST-1e 3101            36
+2        Mars   TRAPPIST-1e 1475            17
+3      Europa   TRAPPIST-1e 1189            14
+4      Europa   55 Cancri e  886            10
+5       Earth PSO J318.5-22  712             8
+6       Earth   55 Cancri e  690             8
+7        Mars   55 Cancri e  193             2
+8     Unknown   TRAPPIST-1e  150             2
+9       Earth       Unknown   99             1
+10       Mars PSO J318.5-22   49             1
+11       Mars       Unknown   42             0
+12     Europa       Unknown   37             0
+13    Unknown   55 Cancri e   31             0
+14     Europa PSO J318.5-22   19             0
+15    Unknown PSO J318.5-22   16             0
+16    Unknown       Unknown    4             0</code></pre>
+</div>
+</div>
+</section>
+<section id="crosstab-of-homeplanet-destination-row" class="level4">
+<h4 class="anchored" data-anchor-id="crosstab-of-homeplanet-destination-row"><strong>Crosstab of HomePlanet &amp; Destination (row %):</strong></h4>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>           Destination 55 Cancri e PSO J318.5-22 TRAPPIST-1e Unknown    Sum
+HomePlanet                                                                 
+Earth                        14.99         15.47       67.38    2.15 100.00
+Europa                       41.58          0.89       55.80    1.74 100.00
+Mars                         10.97          2.79       83.85    2.39 100.00
+Unknown                      15.42          7.96       74.63    1.99 100.00</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="who-got-transported-based-on-homeplanet-and-destination" class="level3">
+<h3 class="anchored" data-anchor-id="who-got-transported-based-on-homeplanet-and-destination">4. Who got transported based on HomePlanet and Destination?</h3>
+<p>Again, despite the higher number of passengers from Earth on board comparing to the other two home planets, there was a higher percentage among passengers from Europa that got transported to their destination (66% of passengers from Europa were transported vs.&nbsp;42% of passengers from Earth). Earth was the only home planet that shows a higher likelihood of those passengers who were not transported.</p>
+<p>55 Cancri e destination has a higher portion of transported passengers (61% of passengers got transported to 55 Cancri e comparing to 47% of those transported to Earth).</p>
+<section id="crosstab-of-homeplanet-transported" class="level4">
+<h4 class="anchored" data-anchor-id="crosstab-of-homeplanet-transported">Crosstab of HomePlanet &amp; Transported:</h4>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>                       Count      Row %     
+           Transported False True False True
+HomePlanet                                  
+Earth                   2651 1951    58   42
+Europa                   727 1404    34   66
+Mars                     839  920    48   52
+Unknown                   98  103    49   51</code></pre>
+</div>
+</div>
+</section>
+<section id="crosstab-of-destination-transported" class="level4">
+<h4 class="anchored" data-anchor-id="crosstab-of-destination-transported">Crosstab of Destination &amp; Transported:</h4>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>                          Count      Row %     
+              Transported False True False True
+Destination                                    
+55 Cancri e                 702 1098    39   61
+PSO J318.5-22               395  401    50   50
+TRAPPIST-1e                3128 2787    53   47
+Unknown                      90   92    49   51</code></pre>
+</div>
+</div>
+</section>
+<section id="transported-passengers-by-homeplanet-and-destination" class="level4">
+<h4 class="anchored" data-anchor-id="transported-passengers-by-homeplanet-and-destination">Transported passengers by HomePlanet and Destination:</h4>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="spaceship_titanic_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid" width="576"></p>
+</div>
+</div>
+</section>
+</section>
+<section id="what-does-the-age-groups-look-like-among-the-passengers" class="level3">
+<h3 class="anchored" data-anchor-id="what-does-the-age-groups-look-like-among-the-passengers">5. What does the age groups look like among the passengers?</h3>
+<p>Average age of the passengers are 29, youngest passengers are 0 (assuming they were newborns who hadn’t reach 1 year old), and the oldest passengers are 79. The majority of the passengers (53%) were adult between 20-39. There were much smaller passengers among those children 0-12 (9%) and senior 60+ (3%).</p>
+<p>Among the transported passengers, children 0-12 and teens 13-19 shows the higher likelihood of being transported (70% and 52% respectively) than the older age groups.</p>
+<section id="summary-statistics-age" class="level4">
+<h4 class="anchored" data-anchor-id="summary-statistics-age">Summary statistics (Age):</h4>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+   0.00   19.00   27.00   28.83   38.00   79.00     179 </code></pre>
+</div>
+</div>
+</section>
+<section id="age-distribution-of-the-passengers" class="level4">
+<h4 class="anchored" data-anchor-id="age-distribution-of-the-passengers">Age distribution of the passengers:</h4>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="spaceship_titanic_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid" width="576"></p>
+</div>
+</div>
+</section>
+<section id="age-group-count" class="level4">
+<h4 class="anchored" data-anchor-id="age-group-count">Age group (count):</h4>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>               
+Age_group       Count Total %
+  Children 0-12   806       9
+  Teen 13-19     1352      16
+  Adult 20-39    4497      53
+  Adult 40-59    1605      19
+  Senior 60+      254       3
+  Sum            8514     100</code></pre>
+</div>
+</div>
+</section>
+<section id="crosstab-of-age-group-transported" class="level4">
+<h4 class="anchored" data-anchor-id="crosstab-of-age-group-transported">Crosstab of Age group &amp; Transported:</h4>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>                          Count           Row %          
+              Transported False True  Sum False True  Sum
+Age_group                                                
+Children 0-12               242  564  806    30   70  100
+Teen 13-19                  645  707 1352    48   52  100
+Adult 20-39                2405 2092 4497    53   47  100
+Adult 40-59                 799  806 1605    50   50  100
+Senior 60+                  135  119  254    53   47  100</code></pre>
+</div>
+</div>
+</section>
+<section id="age-distribution-of-the-passengers-by-transported-groups" class="level4">
+<h4 class="anchored" data-anchor-id="age-distribution-of-the-passengers-by-transported-groups">Age distribution of the passengers by Transported groups:</h4>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="spaceship_titanic_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid" width="576"></p>
+</div>
+</div>
+</section>
+</section>
+<section id="who-used-cryosleep-during-the-voyage" class="level3">
+<h3 class="anchored" data-anchor-id="who-used-cryosleep-during-the-voyage">6. Who used CryoSleep during the voyage?</h3>
+<p>More passengers (64%) opted to not be put into CryoSleep. Younger passengers (children 0-12 and teens 13-19) appears to have slightly higher percentage to use CryoSleep than older groups. There’s significant percentage indicating those who opted to use CryoSleep had a higher chance (82%) being transported comparing to those who didn’t opt CryoSleep with more likelihood 67% for not being transported.</p>
+<section id="passenger-opting-cryosleep-count" class="level4">
+<h4 class="anchored" data-anchor-id="passenger-opting-cryosleep-count">Passenger opting CryoSleep (count):</h4>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>         
+CryoSleep Count Total %
+    False  5439      64
+    True   3037      36
+    Sum    8476     100</code></pre>
+</div>
+</div>
+</section>
+<section id="cryosleep-vs-avg-passenger-age" class="level4">
+<h4 class="anchored" data-anchor-id="cryosleep-vs-avg-passenger-age">CryoSleep vs Avg passenger age:</h4>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 2
+  CryoSleep Avg_age
+  &lt;chr&gt;       &lt;dbl&gt;
+1 False          30
+2 True           27
+3 &lt;NA&gt;           28</code></pre>
+</div>
+</div>
+</section>
+<section id="crosstab-of-age-group-cryosleep" class="level4">
+<h4 class="anchored" data-anchor-id="crosstab-of-age-group-cryosleep">Crosstab of Age group &amp; CryoSleep:</h4>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>                        Count           Row %          
+              CryoSleep False True  Sum False True  Sum
+Age_group                                              
+Children 0-12             406  377  783    52   48  100
+Teen 13-19                758  555 1313    58   42  100
+Adult 20-39              2973 1416 4389    68   32  100
+Adult 40-59              1042  524 1566    67   33  100
+Senior 60+                164   83  247    66   34  100</code></pre>
+</div>
+</div>
+</section>
+<section id="crosstab-of-cryosleep-transported" class="level4">
+<h4 class="anchored" data-anchor-id="crosstab-of-cryosleep-transported">Crosstab of CryoSleep &amp; Transported:</h4>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>                      Count           Row %          
+          Transported False True  Sum False True  Sum
+CryoSleep                                            
+False                  3650 1789 5439    67   33  100
+True                    554 2483 3037    18   82  100</code></pre>
+</div>
+</div>
+</section>
+<section id="passengers-in-cryosleep-vs-transported" class="level4">
+<h4 class="anchored" data-anchor-id="passengers-in-cryosleep-vs-transported">Passengers in cryosleep vs Transported:</h4>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="spaceship_titanic_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid" width="576"></p>
+</div>
+</div>
+</section>
+<section id="cryosleep-vs-homeplanet-and-destination" class="level4">
+<h4 class="anchored" data-anchor-id="cryosleep-vs-homeplanet-and-destination">CryoSleep vs HomePlanet and Destination:</h4>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code> HomePlanet 55 Cancri e PSO J318.5-22 TRAPPIST-1e Unknown Total
+      Earth         205           355         809      13  1382
+     Europa         441             9         447      14   911
+       Mars          76            11         561      21   669
+    Unknown          17             8          50       0    75
+      Total         739           383        1867      48  3037</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="who-were-those-vip-passengers-did-many-of-them-get-transported" class="level3">
+<h3 class="anchored" data-anchor-id="who-were-those-vip-passengers-did-many-of-them-get-transported">7. Who were those VIP passengers? Did many of them get transported?</h3>
+<p>There was only a small group (2%) of the passengers who paid for VIP service during the voyage. Among those VIP passengers were adult and senior age groups. Interestingly, there were no passengers from Earth paid for VIP - only those from Europa and Mars paid for the service.</p>
+<p>More than half (62%) of those VIP passengers didn’t get transported to their destination.</p>
+<section id="vip-passengers-count" class="level4">
+<h4 class="anchored" data-anchor-id="vip-passengers-count">VIP passengers (count):</h4>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>       
+VIP     Count Total %
+  False  8291      98
+  True    199       2
+  Sum    8490     100</code></pre>
+</div>
+</div>
+</section>
+<section id="vip-passengers-vs-avg-age" class="level4">
+<h4 class="anchored" data-anchor-id="vip-passengers-vs-avg-age">VIP passengers vs Avg age:</h4>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 2
+  VIP   Avg_age
+  &lt;chr&gt;   &lt;dbl&gt;
+1 False      29
+2 True       37
+3 &lt;NA&gt;       28</code></pre>
+</div>
+</div>
+</section>
+<section id="vip-passengers-vs-age-group" class="level4">
+<h4 class="anchored" data-anchor-id="vip-passengers-vs-age-group">VIP passengers vs Age group:</h4>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>                  Count           Row %          
+              VIP False True  Sum False True  Sum
+Age_group                                        
+Children 0-12       782    0  782   100    0  100
+Teen 13-19         1317    2 1319   100    0  100
+Adult 20-39        4270  131 4401    97    3  100
+Adult 40-59        1515   54 1569    97    3  100
+Senior 60+          235   11  246    96    4  100</code></pre>
+</div>
+</div>
+</section>
+<section id="vip-passengers-vs-transported" class="level4">
+<h4 class="anchored" data-anchor-id="vip-passengers-vs-transported">VIP passengers vs Transported:</h4>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>                  Count           Row %          
+      Transported False True  Sum False True  Sum
+VIP                                              
+False              4093 4198 8291    49   51  100
+True                123   76  199    62   38  100</code></pre>
+</div>
+</div>
+</section>
+<section id="vip-passengers-vs-homeplanet-destination" class="level4">
+<h4 class="anchored" data-anchor-id="vip-passengers-vs-homeplanet-destination">VIP passengers vs HomePlanet &amp; Destination:</h4>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code> HomePlanet 55 Cancri e PSO J318.5-22  TRAPPIST-1e    Unknown        Total
+     Europa  96.9% (63)    55.6% (10)  49.1%  (56) 100.0% (2)  65.8% (131)
+       Mars   0.0%  (0)    44.4%  (8)  48.2%  (55)   0.0% (0)  31.7%  (63)
+    Unknown   3.1%  (2)     0.0%  (0)   2.6%   (3)   0.0% (0)   2.5%   (5)
+      Total 100.0% (65)   100.0% (18) 100.0% (114) 100.0% (2) 100.0% (199)</code></pre>
+</div>
+</div>
+</section>
+<section id="vip-passengers-vs-transported-1" class="level4">
+<h4 class="anchored" data-anchor-id="vip-passengers-vs-transported-1">VIP passengers vs Transported:</h4>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="spaceship_titanic_files/figure-html/unnamed-chunk-30-1.png" class="img-fluid" width="576"></p>
+</div>
+</div>
+</section>
+</section>
+<section id="who-were-those-big-spenders-on-board" class="level3">
+<h3 class="anchored" data-anchor-id="who-were-those-big-spenders-on-board">8. Who were those big spenders on board?</h3>
+<p>It appears Europa passengers were the biggest spender on the luxury amenities - 6.8 million in total bill with an average of 3.5 thousand per passenger. Earth passengers appears to be the second in spending by total billed at 2.8 million - but that’s mainly because they were the largest group on board. They were actually the least spenders with an average of 688 per passenger. Adult 20-39 group was the top spender by total billed (6.8 million) while Senior 60+ was the top spender by average spending per passenger (around 2 thousand per passenger).</p>
+<section id="top-5-spenders-by-total-bill" class="level4">
+<h4 class="anchored" data-anchor-id="top-5-spenders-by-total-bill">Top 5 spenders by total bill:</h4>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>                Name Age HomePlanet Destination   VIP Transported Total_bill
+1  Markar Radisiouss  68     Europa 55 Cancri e False       False      35987
+2 Pulchib Quidedbolt  41     Europa 55 Cancri e  True        True      31076
+3     Scharab Conale  31     Europa 55 Cancri e  True        True      31074
+4   Mirfar Optionful  18     Europa TRAPPIST-1e False       False      30478
+5     Maiam Oilloody  36     Europa 55 Cancri e False       False      29608</code></pre>
+</div>
+</div>
+</section>
+<section id="sum-of-total-bill-by-homeplanet" class="level4">
+<h4 class="anchored" data-anchor-id="sum-of-total-bill-by-homeplanet">Sum of total bill by HomePlanet:</h4>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 2
+  HomePlanet Sum_Total_bill
+  &lt;chr&gt;               &lt;dbl&gt;
+1 Europa            6828385
+2 Earth             2823306
+3 Mars              1696039
+4 Unknown            209893</code></pre>
+</div>
+</div>
+</section>
+<section id="average-total-bill-by-homeplanet" class="level4">
+<h4 class="anchored" data-anchor-id="average-total-bill-by-homeplanet">Average total bill by HomePlanet:</h4>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 2
+  HomePlanet Avg_Total_bill
+  &lt;chr&gt;               &lt;dbl&gt;
+1 Europa              3553.
+2 Unknown             1147.
+3 Mars                1074.
+4 Earth                688.</code></pre>
+</div>
+</div>
+</section>
+<section id="boxplot-of-homeplanet-vs-total-bill" class="level4">
+<h4 class="anchored" data-anchor-id="boxplot-of-homeplanet-vs-total-bill">Boxplot of HomePlanet vs total bill:</h4>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="spaceship_titanic_files/figure-html/unnamed-chunk-34-1.png" class="img-fluid" width="576"></p>
+</div>
+</div>
+</section>
+<section id="sum-of-total-bill-by-destination" class="level4">
+<h4 class="anchored" data-anchor-id="sum-of-total-bill-by-destination">Sum of total bill by Destination:</h4>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 2
+  Destination   Sum_Total_bill
+  &lt;chr&gt;                  &lt;dbl&gt;
+1 TRAPPIST-1e          7316054
+2 55 Cancri e          3606677
+3 PSO J318.5-22         416911
+4 Unknown               217981</code></pre>
+</div>
+</div>
+</section>
+<section id="average-total-bill-by-destination" class="level4">
+<h4 class="anchored" data-anchor-id="average-total-bill-by-destination">Average total bill by Destination:</h4>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 2
+  Destination   Avg_Total_bill
+  &lt;chr&gt;                  &lt;dbl&gt;
+1 55 Cancri e            2235.
+2 TRAPPIST-1e            1382.
+3 Unknown                1337.
+4 PSO J318.5-22           582.</code></pre>
+</div>
+</div>
+</section>
+<section id="sum-of-total-bill-by-age-group" class="level4">
+<h4 class="anchored" data-anchor-id="sum-of-total-bill-by-age-group">Sum of total bill by Age group:</h4>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 2
+  Age_group     Sum_Total_bill
+  &lt;fct&gt;                  &lt;dbl&gt;
+1 Adult 20-39          6896604
+2 Adult 40-59          2841561
+3 Teen 13-19           1154290
+4 Senior 60+            460733
+5 &lt;NA&gt;                  204435
+6 Children 0-12              0</code></pre>
+</div>
+</div>
+</section>
+<section id="average-total-bill-by-age-group" class="level4">
+<h4 class="anchored" data-anchor-id="average-total-bill-by-age-group">Average total bill by Age group:</h4>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 2
+  Age_group     Avg_Total_bill
+  &lt;fct&gt;                  &lt;dbl&gt;
+1 Senior 60+             2012.
+2 Adult 40-59            1971.
+3 Adult 20-39            1717.
+4 &lt;NA&gt;                   1239 
+5 Teen 13-19              952.
+6 Children 0-12             0 </code></pre>
+</div>
+</div>
+</section>
+<section id="boxplot-of-age-group-vs-total-bill" class="level4">
+<h4 class="anchored" data-anchor-id="boxplot-of-age-group-vs-total-bill">Boxplot of Age group vs total bill:</h4>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="spaceship_titanic_files/figure-html/unnamed-chunk-39-1.png" class="img-fluid" width="576"></p>
+</div>
+</div>
+</section>
+<section id="sum-of-total-bill-by-transported" class="level4">
+<h4 class="anchored" data-anchor-id="sum-of-total-bill-by-transported">Sum of total bill by Transported:</h4>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 2
+  Transported Sum_Total_bill
+  &lt;chr&gt;                &lt;dbl&gt;
+1 False              7938955
+2 True               3618668</code></pre>
+</div>
+</div>
+</section>
+<section id="boxplot-of-transported-vs-total-bill" class="level4">
+<h4 class="anchored" data-anchor-id="boxplot-of-transported-vs-total-bill">Boxplot of Transported vs total bill:</h4>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="spaceship_titanic_files/figure-html/unnamed-chunk-41-1.png" class="img-fluid" width="576"></p>
+</div>
+</div>
+</section>
+</section>
+<section id="how-many-passengers-got-transported" class="level3">
+<h3 class="anchored" data-anchor-id="how-many-passengers-got-transported">9. How many passengers got transported?</h3>
+<section id="passengers-count-by-transported" class="level4">
+<h4 class="anchored" data-anchor-id="passengers-count-by-transported">Passengers count by Transported:</h4>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>           
+Transported  Count Total %
+      False 4315.0    49.6
+      True  4378.0    50.4
+      Sum   8693.0   100.0</code></pre>
+</div>
+</div>
+</section>
+</section>
+</section>
+<section id="conclusion" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
+<p>This Spaceship Titanic data has records of 8,693 passengers (observations) who were on the spaceship emigrating to new habitable planets. The dataset collects the passenger information including their Name, HomePlanet, Destination, Age, amenity usage like CryoSleep, their spending on luxury amenities, VIP status, and whether they were transported to another dimension.</p>
+<p>After analyzing the data, it was found that the passengers were from Earth, Europa, and Mars emigrating to these three new destinations 55 Cancri e, PSO J318.5-22, and TRAPPIST-1e. Earth passengers were the largest group among all passengers (4,602 / 53%). TRAPPIST-1e was the destination where the majority of the passengers were debarking to (5,915 / 68%). The passenger age ranges from youngest (less than 1 year old) to oldest 79 years old. The largest age group were those adult age 20-39 (4,497 / 53%). More passengers (5,439 / 64%) opted to not be put into CryoSleep for the duration of the voyage. There was very small group of passengers (199 / 2%) who paid for VIP service. The passengers from Europa were dominating the VIP service and they were also the biggest spenders on the luxury amenities.</p>
+<p>Among the passengers who were transported to an alternate dimension, a combination of the following factors appear to show higher chance of being transported. The passengers from Europa (61%), those who would be debarking to 55 Cancri e (61%), those children age group between 0-12 (70%), those who opted to use CryoSleep (82%), and those who spent less on amenities and non-VIP.</p>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

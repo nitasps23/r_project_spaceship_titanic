@@ -1,0 +1,572 @@
+---
+title: "Spaceship Titanic Project"
+format: html
+execute:
+  echo: false
+editor: visual
+fig-width: 6
+fig-asp: 0.618
+---
+
+The objective of this project is to conduct an exploratory data analysis of the Spaceship Titanic data set using statistics summary and visualization approaches to explore the data and to identify interesting patterns and significant information within the data.
+
+## Check data structure
+
+```{r}
+#| label: library packages
+#| message: false
+#| warning: false
+# Setup and preparation
+library(readr)
+library(readxl)
+library(dplyr)
+library(ggplot2)
+library(ggthemes)
+library(stringr)
+library(tidyr)
+library(janitor)
+library(gmodels)
+library(alluvial)
+library(ggalluvial)
+library(patchwork)
+source("http://pcwww.liv.ac.uk/~william/R/crosstab.r")
+```
+
+```{r}
+#| label: read in data
+spaceship <- read.csv("data/train.csv")
+```
+
+```{r}
+#| label: check data
+str(spaceship)
+View(spaceship)
+```
+
+## Getting insights from the variables
+
+### 1. Where were the home planets of those passengers departed from?
+
+The passengers departed from three main home planets Earth, Europa, and Mars. About half of those passengers (53%) were from Earth. There're small number (2%) of passengers whose their home planets information are missing.
+
+#### Passenger count by HomePlanet:
+
+```{r}
+#| label: HomePlanet - count
+# replace blank home planet as unknown
+spaceship$HomePlanet[spaceship$HomePlanet == ""] <- "Unknown"
+# passenger count by HomePlanet
+crosstab(spaceship, row.vars = "HomePlanet", dec.places = 0)
+```
+
+```{r}
+#| label: HomePlanet - count - donut plot
+# pie plot
+data <- spaceship |>
+  count(HomePlanet)
+data$fraction <- data$n / sum(data$n) # Compute percentages
+data$ymax <- cumsum(data$fraction) # Compute the cumulative percentages (top of each rectangle)
+data$ymin <- c(0, head(data$ymax, n=-1)) # Compute the bottom of each rectangle
+data$labelPosition <- (data$ymax + data$ymin) / 2 # Compute label position
+data$label <- paste0(data$HomePlanet, "\n", format(data$n, big.mark = ","), " (", round(data$fraction * 100, digits = 2), "%)") # Compute a good label
+
+# Make the plot
+ggplot(data, aes(ymax=ymax, ymin=ymin, xmax=4, xmin=3, fill=HomePlanet)) +
+  geom_rect() +
+  geom_label(x=3.5, aes(y=labelPosition, label=label), size=2.7) +
+  scale_fill_brewer(palette=4) +
+  coord_polar(theta="y") +
+  xlim(c(2, 4)) +
+  theme_void() +
+  theme(legend.position = "none")
+```
+
+### 2. Which planet destination most passengers would be debarking to?
+
+There are three destinations the passengers would be debarking to 55 Cancri e, PSO J318.5-22, and TRAPPIST-1e. TRAPPIST-1e appears to be the top destination - 68% of the passengers were to emigrate there.
+
+#### Passenger count by Destination:
+
+```{r}
+#| label: Destination - count 
+# replace blank destination as unknown
+spaceship$Destination[spaceship$Destination == ""] <- "Unknown"
+# passenger count by Destination
+crosstab(spaceship, row.vars = "Destination", dec.places = 0)
+```
+
+```{r}
+#| label: Destination - count - donut plot
+# pie plot
+data <- spaceship |>
+  count(Destination)
+data$fraction <- data$n / sum(data$n) # Compute percentages
+data$ymax <- cumsum(data$fraction) # Compute the cumulative percentages (top of each rectangle)
+data$ymin <- c(0, head(data$ymax, n=-1)) # Compute the bottom of each rectangle
+data$labelPosition <- (data$ymax + data$ymin) / 2 # Compute label position
+data$label <- paste0(data$Destination, "\n", format(data$n, big.mark = ","), " (", round(data$fraction * 100, digits = 2), "%)") # Compute a good label
+
+# Make the plot
+ggplot(data, aes(ymax=ymax, ymin=ymin, xmax=4, xmin=3, fill=Destination)) +
+  geom_rect() +
+  geom_label(x=3.5, aes(y=labelPosition, label=label), size=2.7) +
+  scale_fill_brewer(palette="Set3") +
+  coord_polar(theta="y") +
+  xlim(c(2, 4)) +
+  theme_void() +
+  theme(legend.position = "none")
+```
+
+### 3. Top 3 HomePlanet and Destination pairs
+
+The majority of passengers were emigrating from Earth to TRAPPIST-1e (36% of the passengers). The 2nd and 3rd were Mars to TRAPPIST-1e and Europa to TRAPPIST-1e respectively. Though there were higher number of passengers from Earth who were being transported to TRAPPIST-1e. Those from Mars shows higher likelihood to emigrate to TRAPPIST-1e than those from Earth (84% of passengers from Mars opted to emigrate to TRAPPIST-1e vs. 67% of those from Earth). Passengers from Europa were the only group that shows higher interest in emigrating to 55 Cancri e (42% of Europa Passengers were heading there). PSO J318.5-22 appears to be the least appealing destination among the passengers.
+
+#### **HomePlanet & Destination pairs (count):**
+
+```{r}
+spaceship |>
+  count(HomePlanet, Destination, sort = TRUE) |>
+  mutate(percent_total = round((n / sum(n))*100))
+```
+
+#### **Crosstab of HomePlanet & Destination (row %):**
+
+```{r}
+#crosstab with margins
+crosstab(spaceship, row.vars = "HomePlanet", col.vars = "Destination", type = "r")
+```
+
+### 4. Who got transported based on HomePlanet and Destination?
+
+Again, despite the higher number of passengers from Earth on board comparing to the other two home planets, there was a higher percentage among passengers from Europa that got transported to their destination (66% of passengers from Europa were transported vs. 42% of passengers from Earth). Earth was the only home planet that shows a higher likelihood of those passengers who were not transported.
+
+55 Cancri e destination has a higher portion of transported passengers (61% of passengers got transported to 55 Cancri e comparing to 47% of those transported to Earth).
+
+#### Crosstab of HomePlanet & Transported:
+
+```{r}
+crosstab(spaceship, 
+         row.vars = "HomePlanet",
+         col.vars = "Transported", 
+         type = c("f", "r"),
+         dec.places = 0, addmargins = FALSE)
+```
+
+#### Crosstab of Destination & Transported:
+
+```{r}
+crosstab(spaceship, 
+         row.vars = "Destination",
+         col.vars = "Transported", 
+         type = c("f", "r"),
+         dec.places = 0, addmargins = FALSE)
+```
+
+#### Transported passengers by HomePlanet and Destination:
+
+```{r}
+#| warning: false
+data <- spaceship |>
+  count(HomePlanet, Destination, Transported, sort = TRUE)
+
+ggplot(as.data.frame(data),
+       aes(y = n, axis1 = HomePlanet, axis2 = Destination)) +
+  geom_alluvium(aes(fill = Transported), width = 1/12) +
+  geom_stratum(width = 1/12, fill = "black", color = "grey") +
+  geom_label(stat = "stratum", aes(label = after_stat(stratum))) +
+  scale_x_discrete(limits = c("HomePlanet", "Destination"), expand = c(.1, .1)) +
+  scale_fill_brewer(type = "qual", palette = "Set1") +
+  ylab("(count)")
+```
+
+### 5. What does the age groups look like among the passengers?
+
+Average age of the passengers are 29, youngest passengers are 0 (assuming they were newborns who hadn't reach 1 year old), and the oldest passengers are 79. The majority of the passengers (53%) were adult between 20-39. There were much smaller passengers among those children 0-12 (9%) and senior 60+ (3%).
+
+Among the transported passengers, children 0-12 and teens 13-19 shows the higher likelihood of being transported (70% and 52% respectively) than the older age groups.
+
+#### Summary statistics (Age):
+
+```{r}
+# check Age variable
+summary(spaceship$Age)
+```
+
+#### Age distribution of the passengers:
+
+```{r}
+#| warning: false
+spaceship |>
+  ggplot(aes(Age)) +
+  geom_histogram(binwidth = 5, colour="black", fill="white")
+```
+
+#### Age group (count):
+
+```{r}
+# create age groups
+spaceship$Age_group <- cut(spaceship$Age, c(0, 12, 19, 39, 59, Inf), 
+                     c("Children 0-12", "Teen 13-19", "Adult 20-39", "Adult 40-59", "Senior 60+"), include.lowest = TRUE)
+# top age group
+crosstab(spaceship, row.vars = "Age_group", dec.places = 0)
+```
+
+#### Crosstab of Age group & Transported:
+
+```{r}
+# transported vs avg age
+mu <- spaceship |>
+  group_by(Transported) |>
+  summarise(Avg_age = round(mean(Age, na.rm = TRUE), 2))
+```
+
+```{r}
+#| warning: false
+# top age group that got transported
+crosstab(spaceship, 
+         row.vars = "Age_group", 
+         col.vars = "Transported", 
+         type = c("f", "r"), dec.places = 0)
+```
+
+#### Age distribution of the passengers by Transported groups:
+
+```{r}
+#| warning: false
+#| message: false
+# transported vs avg age
+mu <- spaceship |>
+  group_by(Transported) |>
+  summarise(Avg_age = round(mean(Age, na.rm = TRUE), 2))
+
+spaceship |>
+  ggplot(aes(x = Age, color = Transported, fill=Transported, )) +
+  geom_histogram(alpha=0.5, position="identity") +
+  geom_vline(data=mu, aes(xintercept=Avg_age, color=Transported),
+             linetype="dashed")
+```
+
+### 6. Who used CryoSleep during the voyage?
+
+More passengers (64%) opted to not be put into CryoSleep. Younger passengers (children 0-12 and teens 13-19) appears to have slightly higher percentage to use CryoSleep than older groups. There's significant percentage indicating those who opted to use CryoSleep had a higher chance (82%) being transported comparing to those who didn't opt CryoSleep with more likelihood 67% for not being transported.
+
+#### Passenger opting CryoSleep (count):
+
+```{r}
+# replace empty string with NA
+spaceship$CryoSleep[spaceship$CryoSleep == ""] <- NA
+# CryoSleep
+crosstab(spaceship, row.vars = "CryoSleep", dec.places = 0)
+```
+
+#### CryoSleep vs Avg passenger age:
+
+```{r}
+# any interesting info between CryoSleep vs Age
+spaceship |>
+  group_by(CryoSleep) |>
+  summarise(Avg_age = round(mean(Age, na.rm = TRUE), 0))
+```
+
+#### Crosstab of Age group & CryoSleep: 
+
+```{r}
+#| warning: false
+# any interesting info between CryoSleep vs Age group
+# top age group that opted CryoSleep
+# % chance to opted CryoSleep by Age group
+crosstab(spaceship, 
+         row.vars = "Age_group", 
+         col.vars = "CryoSleep", 
+         type = c("f", "r"),
+         dec.places = 0)
+```
+
+#### Crosstab of CryoSleep & Transported: 
+
+```{r}
+#| warning: false
+# CryoSleep vs Transported
+crosstab(spaceship, 
+         row.vars = "CryoSleep", 
+         col.vars = "Transported", 
+         type = c("f", "r"),
+         dec.places = 0)
+```
+
+#### Passengers in cryosleep vs Transported:
+
+```{r}
+p1 <- spaceship |>
+  filter(!is.na(CryoSleep)) |>
+  ggplot(aes(x = CryoSleep, fill = Transported)) +
+  geom_bar(position = "stack") +
+  scale_fill_brewer(palette = "Paired")
+
+p2 <- spaceship |>
+  filter(!is.na(CryoSleep)) |>
+  ggplot(aes(x = CryoSleep, fill = Transported)) +
+  geom_bar(position = "fill") +
+  scale_fill_brewer(palette = "Paired")
+
+p1 + p2
+```
+
+#### CryoSleep vs HomePlanet and Destination:
+
+```{r}
+# CryoSleep vs HomePlanet and Destination
+# 
+spaceship |>
+  filter(CryoSleep == "True") |>
+  tabyl(HomePlanet, Destination) |>
+  adorn_totals(where = c("row", "col"))
+```
+
+### 7. Who were those VIP passengers? Did many of them get transported?
+
+There was only a small group (2%) of the passengers who paid for VIP service during the voyage. Among those VIP passengers were adult and senior age groups. Interestingly, there were no passengers from Earth paid for VIP - only those from Europa and Mars paid for the service.
+
+More than half (62%) of those VIP passengers didn't get transported to their destination.
+
+#### VIP passengers (count):
+
+```{r}
+# explore VIP
+# replace empty string with NA
+spaceship$VIP[spaceship$VIP == ""] <- NA
+crosstab(spaceship, row.vars = "VIP", dec.places = 0)
+```
+
+#### VIP passengers vs Avg age:
+
+```{r}
+# Avg age of those who were VIP
+spaceship |>
+  group_by(VIP) |>
+  summarise(Avg_age = round(mean(Age, na.rm = TRUE), 0))
+```
+
+#### VIP passengers vs Age group:
+
+```{r}
+#| warning: false
+# how about Age group vs VIP
+crosstab(spaceship, 
+         row.vars = "Age_group", 
+         col.vars = "VIP", 
+         type = c("f", "r"),
+         dec.places = 0)
+```
+
+#### VIP passengers vs Transported:
+
+```{r}
+#| warning: false
+# VIP vs Transported
+crosstab(spaceship, 
+         row.vars = "VIP", 
+         col.vars = "Transported", 
+         type = c("f", "r"),
+         dec.places = 0)
+```
+
+#### VIP passengers vs HomePlanet & Destination:
+
+```{r}
+spaceship |>
+  filter(VIP == "True") |>
+  tabyl(HomePlanet, Destination) |>
+  adorn_totals(where = c("row", "col")) |>
+  adorn_percentages("col") |>
+  adorn_pct_formatting(digits = 1) |>
+  adorn_ns()
+```
+
+#### VIP passengers vs Transported:
+
+```{r}
+# replace empty string with NA
+spaceship$VIP[spaceship$VIP == ""] <- NA
+
+p1 <- spaceship |>
+  filter(!is.na(VIP)) |>
+  ggplot(aes(x = VIP, fill = Transported)) +
+  geom_bar(position = "stack") +
+  scale_fill_brewer(palette = "Oranges")
+
+p2 <- spaceship |>
+  filter(!is.na(VIP)) |>
+  ggplot(aes(x = VIP, fill = Transported)) +
+  geom_bar(position = "fill") +
+  scale_fill_brewer(palette = "Oranges")
+
+p1 + p2
+```
+
+### 8. Who were those big spenders on board?
+
+It appears Europa passengers were the biggest spender on the luxury amenities - 6.8 million in total bill with an average of 3.5 thousand per passenger. Earth passengers appears to be the second in spending by total billed at 2.8 million - but that's mainly because they were the largest group on board. They were actually the least spenders with an average of 688 per passenger. Adult 20-39 group was the top spender by total billed (6.8 million) while Senior 60+ was the top spender by average spending per passenger (around 2 thousand per passenger).
+
+#### Top 5 spenders by total bill:
+
+```{r}
+#| message: false
+# add Total_bill
+spaceship <- spaceship |>
+  mutate(Total_bill = RoomService + FoodCourt + ShoppingMall + Spa + VRDeck)
+
+
+spaceship |>
+  select(Name, Age, HomePlanet, Destination, VIP, Transported, Total_bill) |>
+  arrange(desc(Total_bill)) |>
+  top_n(5)
+```
+
+#### Sum of total bill by HomePlanet:
+
+```{r}
+# Sum bills by HomePlanet
+spaceship |>
+  select(HomePlanet, Total_bill) |>
+  group_by(HomePlanet) |>
+  summarise(
+    Sum_Total_bill = sum(Total_bill, na.rm = TRUE)
+  ) |>
+  arrange(desc(Sum_Total_bill))
+```
+
+#### Average total bill by HomePlanet:
+
+```{r}
+# Avg bills by HomePlanet
+spaceship |>
+  select(HomePlanet, Total_bill) |>
+  group_by(HomePlanet) |>
+  summarise(
+    Avg_Total_bill = mean(Total_bill, na.rm = TRUE)
+  ) |>
+  arrange(desc(Avg_Total_bill))
+```
+
+#### Boxplot of HomePlanet vs total bill:
+
+```{r}
+#| warning: false
+spaceship |>
+  ggplot(aes(x=HomePlanet, y=Total_bill, fill=HomePlanet)) + 
+  geom_boxplot(alpha=0.7) +
+  theme(legend.position="none") +
+  scale_fill_brewer(palette="Dark2") +
+  scale_y_continuous(breaks=seq(0,40000,5000)) +
+  coord_flip()
+```
+
+#### Sum of total bill by Destination:
+
+```{r}
+# Sum bills by Destination
+spaceship |>
+  select(Destination, Total_bill) |>
+  group_by(Destination) |>
+  summarise(
+    Sum_Total_bill = sum(Total_bill, na.rm = TRUE)
+  ) |>
+  arrange(desc(Sum_Total_bill))
+```
+
+#### Average total bill by Destination:
+
+```{r}
+# Avg bills by Destination
+spaceship |>
+  select(Destination, Total_bill) |>
+  group_by(Destination) |>
+  summarise(
+    Avg_Total_bill = mean(Total_bill, na.rm = TRUE)
+  ) |>
+  arrange(desc(Avg_Total_bill))
+```
+
+#### Sum of total bill by Age group:
+
+```{r}
+# Sum bills by Age groups
+spaceship |>
+  select(Age_group, Total_bill) |>
+  group_by(Age_group) |>
+  summarise(
+    Sum_Total_bill = sum(Total_bill, na.rm = TRUE)
+  ) |>
+  arrange(desc(Sum_Total_bill))
+```
+
+#### Average total bill by Age group:
+
+```{r}
+# Avg bills by Age_group
+spaceship |>
+  select(Age_group, Total_bill) |>
+  group_by(Age_group) |>
+  summarise(
+    Avg_Total_bill = mean(Total_bill, na.rm = TRUE)
+  ) |>
+  arrange(desc(Avg_Total_bill))
+```
+
+#### Boxplot of Age group vs total bill:
+
+```{r}
+#| warning: false
+spaceship |>
+  filter(!is.na(Age_group)) |>
+  ggplot(aes(x=Age_group, y=Total_bill, fill=Age_group)) + 
+  geom_boxplot(alpha=0.7) +
+  theme(legend.position="none") +
+  scale_fill_brewer(palette="BuPu") +
+  scale_y_continuous(breaks=seq(0,40000,5000)) +
+  coord_flip()
+```
+
+#### Sum of total bill by Transported:
+
+```{r}
+# anything significant between bills vs Transported?
+spaceship |>
+  select(Transported, Total_bill) |>
+  group_by(Transported) |>
+  summarise(
+    Sum_Total_bill = sum(Total_bill, na.rm = TRUE)
+  ) |>
+  arrange(desc(Sum_Total_bill))
+```
+
+#### Boxplot of Transported vs total bill:
+
+```{r}
+#| warning: false
+spaceship |>
+  ggplot(aes(x=Transported, y=Total_bill, fill=Transported)) + 
+  geom_boxplot(alpha=0.7) +
+  theme(legend.position="none") +
+  scale_fill_brewer(palette="BuPu") +
+  scale_y_continuous(breaks=seq(0,30000,10000)) +
+  coord_flip()
+```
+
+### 9. How many passengers got transported?
+
+#### Passengers count by Transported:
+
+```{r}
+# look at Transported
+crosstab(spaceship, row.vars = "Transported", dec.places = 1)
+```
+
+## Conclusion
+
+This Spaceship Titanic data has records of 8,693 passengers (observations) who were on the spaceship emigrating to new habitable planets. The dataset collects the passenger information including their Name, HomePlanet, Destination, Age, amenity usage like CryoSleep, their spending on luxury amenities, VIP status, and whether they were transported to another dimension.
+
+After analyzing the data, it was found that the passengers were from Earth, Europa, and Mars emigrating to these three new destinations 55 Cancri e, PSO J318.5-22, and TRAPPIST-1e. Earth passengers were the largest group among all passengers (4,602 / 53%). TRAPPIST-1e was the destination where the majority of the passengers were debarking to (5,915 / 68%). The passenger age ranges from youngest (less than 1 year old) to oldest 79 years old. The largest age group were those adult age 20-39 (4,497 / 53%). More passengers (5,439 / 64%) opted to not be put into CryoSleep for the duration of the voyage. There was very small group of passengers (199 / 2%) who paid for VIP service. The passengers from Europa were dominating the VIP service and they were also the biggest spenders on the luxury amenities.
+
+Among the passengers who were transported to an alternate dimension, a combination of the following factors appear to show higher chance of being transported. The passengers from Europa (61%), those who would be debarking to 55 Cancri e (61%), those children age group between 0-12 (70%), those who opted to use CryoSleep (82%), and those who spent less on amenities and non-VIP.
